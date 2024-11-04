@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const connectDB = require('./connect.DB'); // Import the database connection function
+
 
 // Import route files
 const bikeRoutes = require('./src/routes/bikeRoutes');
@@ -25,6 +27,8 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use(express.json()); // Middleware to parse JSON
 
+// Connect to the database
+connectDB();
 
 
 //  ROUTES 
