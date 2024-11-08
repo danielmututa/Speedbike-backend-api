@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
 
 const bikeSchema = new mongoose.Schema({
-  
+  serialNumber: {
+    type: String,
+    required: [true, 'Serial number is required'],
+    unique: true,
+    trim: true
+  },
   add: {
     type: String,
     default: 'Cart',
@@ -106,15 +111,23 @@ const bikeSchema = new mongoose.Schema({
       ]
     }
   }
-}, { 
-  timestamps: true 
+}, {
+  timestamps: true
 });
 
-// Create an index for faster queries
-bikeSchema.index({ type: 1, name: 1 });
+// Drop any existing indexes
+bikeSchema.indexes().forEach(async (index) => {
+  try {
+    await mongoose.model('Bike').collection.dropIndex(index);
+  } catch (err) {
+    console.log('Error dropping index:', err);
+  }
+});
 
-// Unique compound index to prevent duplicates based on name and type
-bikeSchema.index({ name: 1, type: 1 }, { unique: true });
+// Define only the indexes you want
+bikeSchema.index({ serialNumber: 1 }, { unique: true }); // Only serialNumber should be unique
+bikeSchema.index({ type: 1 }); // Non-unique index on type
+bikeSchema.index({ name: 1 }); // Non-unique index on name
 
 // Virtual property for full bike description
 bikeSchema.virtual('fullDescription').get(function() {
@@ -126,4 +139,5 @@ bikeSchema.methods.formattedPrice = function() {
   return `$${this.price.toLocaleString()}`;
 };
 
-module.exports = mongoose.model('Bike', bikeSchema);
+const Bike = mongoose.model('Bike', bikeSchema);
+module.exports = Bike;
