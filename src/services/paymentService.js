@@ -22,8 +22,30 @@ const getPayment = async (paymentId) => {
   }
 };
 
+
+
+
+
+
+// Get all payments
+const getAllPayments = async () => {
+  try {
+    const payments = await Payment.find({});
+    return payments;
+  } catch (error) {
+    throw new Error('Failed to fetch payments: ' + error.message);
+  }
+};
+
+
+
+
+
+
 // Export the functions for use in other modules
 module.exports = {
   createPayment,
+  getPayment,
+  getAllPayments,
   getPayment,
 };

@@ -1,16 +1,7 @@
 const mongoose = require('mongoose');
 
 const bikeSchema = new mongoose.Schema({
-  image: {
-    type: String,
-    required: [true, 'Image URL is required'],
-    validate: {
-      validator: function(v) {
-        return /^(https?:\/\/).*\.(jpg|jpeg|png|gif|webp)$/.test(v);
-      },
-      message: 'Please provide a valid image URL'
-    }
-  },
+  
   add: {
     type: String,
     default: 'Cart',

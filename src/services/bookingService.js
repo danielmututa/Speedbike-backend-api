@@ -9,9 +9,26 @@ const createBikeBooking = async (bookingData) => {
 
 // Update an existing bike booking
 const updateBikeBooking = async (bookingId, updateData) => {
-  const updatedBooking = await BikeBooking.findByIdAndUpdate(bookingId, updateData, { new: true }); // Update and return the booking
-  return updatedBooking;
+    try {
+      await BikeBooking.updateOne({ _id: bookingId }, { $set: updateData });
+      const updatedBooking = await BikeBooking.findById(bookingId);
+      return updatedBooking;
+    } catch (error) {
+      throw new Error(`Error updating booking: ${error.message}`);
+    }
+  };
+  
+
+
+  const getAllBikeBookings = async () => {
+    const bookings = await BikeBooking.find({}).populate('userId');
+    return bookings;
 };
+
+
+   
+  
+
 
 // Get a single bike booking by ID
 const getBikeBooking = async (bookingId) => {
@@ -40,6 +57,7 @@ const deleteBikeBooking = async (bookingId) => {
 
 // Export all the functions for use in other modules
 module.exports = {
+  getAllBikeBookings,
   createBikeBooking,
   updateBikeBooking,
   getBikeBooking,

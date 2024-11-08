@@ -115,10 +115,11 @@ const bikeBookingSchema = new mongoose.Schema({
     trim: true,
     maxlength: [500, 'Notes cannot exceed 500 characters']
   },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User' // Assuming you have a User model
-  }
+userId: {
+  type: mongoose.Schema.Types.ObjectId,
+  required: [true, 'User ID is required']
+
+}
 }, {
   timestamps: true
 });
@@ -128,7 +129,7 @@ bikeBookingSchema.index({ email: 1, paymentAmount: 1, userId: 1 }, { unique: tru
 
 // Custom method to check and create booking
 bikeBookingSchema.statics.createBooking = async function(bookingData) {
-  // Create the booking without checking for unique email
+  // Create the booking without checking for unique Email
   const booking = new this(bookingData);
   return await booking.save();
 };

@@ -2,6 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const connectDB = require('./connect.DB'); // Import the database connection function
+const cors = require('cors');
+ const corsConfig = require('./src/config/corsConfig');
+const serverConfig = require('./src/config/serverConfig');
+// const multer = require('multer');
+const path = require('path')
 
 
 // Import route files
@@ -11,11 +16,15 @@ const bookingRoutes = require('./src/routes/bookingRoutes');
 const paymentRoutes = require('./src/routes/paymentsRoutes');
 const reviewRoutes = require('./src/routes/reviewRoutes');
 const eventRoutes = require('./src/routes/eventRoutes');
+const imageRoutes = require('./src/routes/imageRoutes')
+const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 
 dotenv.config(); // Initialize environment variables
 
 const app = express();
+
+app.use(cors());
 
 // Database connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -26,6 +35,21 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch(err => console.error('MongoDB connection error:', err));
 
 app.use(express.json()); // Middleware to parse JSON
+
+
+
+// Error handling middleware
+app.use(errorMiddleware);
+
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//       cb(null, 'uploads/');
+//     },
+//     filename: (req, file, cb) => {
+//       cb(null, file.originalname);
+//     },
+//   });
+
 
 // Connect to the database
 connectDB();
@@ -50,9 +74,24 @@ app.use('/api/reviews', reviewRoutes);
 // Event Route
 app.use('/api/events', eventRoutes);
 
-app.get('/', (req, res) => { res.send('Hello World!'); });
-// Error handling middleware
-app.use(errorMiddleware);
+// Route for image upload
+app.use('/api/images', imageRoutes);
+
+// Route for eventimage
+app.use('/api/eventimage', eventimageRoutes)
+
+// const upload = multer({ storage });
+
+
+
+
+
+// app.use('/api/bookings', bookingRoutes);
+
+
+
+
+
 
 // Test route
 app.get('/', (req, res) => {

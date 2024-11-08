@@ -55,6 +55,10 @@ const eventSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  image: {
+    data: Buffer,
+    contentType: String,
   }
 }, {
   timestamps: true

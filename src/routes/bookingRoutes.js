@@ -9,6 +9,10 @@ router.post('/', bookingController.createBikeBooking);
 // GET a bike booking by ID
 router.get('/:id', bookingController.getBikeBooking);
 
+// GET All bike bookings
+router.get('/', bookingController.getAllBikeBookings);
+
+
 // GET all bike bookings for a specific user
 router.get('/user/:userId', bookingController.getBikeBookings);
 

@@ -22,8 +22,37 @@ const getPayment = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
+// Get all payments
+const getAllPayments = async (req, res) => {
+  try {
+    console.log('Fetching all payments');
+    const payments = await paymentService.getAllPayments();
+    res.status(200).json(payments);
+  } catch (error) {
+    console.error('Error fetching payments:', error);
+    res.status(500).json({ 
+      message: 'Error fetching payments', 
+      error: error.message 
+    });
+  }
+};
+
+
+
+
+
+
 // Export the functions for use in other modules
 module.exports = {
   createPayment,
+  getPayment,
+  getAllPayments,
   getPayment,
 };
