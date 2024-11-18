@@ -115,16 +115,7 @@ const bikeSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Drop any existing indexes
-bikeSchema.indexes().forEach(async (index) => {
-  try {
-    await mongoose.model('Bike').collection.dropIndex(index);
-  } catch (err) {
-    console.log('Error dropping index:', err);
-  }
-});
-
-// Define only the indexes you want
+// Define the indexes after model registration
 bikeSchema.index({ serialNumber: 1 }, { unique: true }); // Only serialNumber should be unique
 bikeSchema.index({ type: 1 }); // Non-unique index on type
 bikeSchema.index({ name: 1 }); // Non-unique index on name
@@ -139,5 +130,7 @@ bikeSchema.methods.formattedPrice = function() {
   return `$${this.price.toLocaleString()}`;
 };
 
+// Register the model (move this after schema definition)
 const Bike = mongoose.model('Bike', bikeSchema);
+
 module.exports = Bike;
