@@ -18,7 +18,9 @@ const reviewRoutes = require('./src/routes/reviewRoutes');
 const eventRoutes = require('./src/routes/eventRoutes');
 const imageRoutes = require('./src/routes/imageRoutes')
 const eventimageRoutes = require('./src/routes/eventimageRoutes')
+const registerRoutes = require('./src/routes/registerRoute')
 const errorMiddleware = require('./src/middleware/errorMiddleware');
+
 
 dotenv.config(); // Initialize environment variables
 
@@ -78,7 +80,9 @@ app.use('/api/events', eventRoutes);
 app.use('/api/images', imageRoutes);
 
 // Route for eventimage
-app.use('/api/eventimage', eventimageRoutes)
+app.use('/api/eventimage', eventimageRoutes);
+
+app.use('/api/register', registerRoutes);
 
 // const upload = multer({ storage });
 
