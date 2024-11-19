@@ -3,14 +3,21 @@ const Payment = require('../modules/paymentModel'); // Adjust the path as necess
 // Create a new payment
 const createPayment = async (paymentData) => {
   try {
-    const payment = new Payment(paymentData); // Create a new payment instance
-    await payment.save(); // Save the payment to the database
-    return payment; // Return the created payment
+    if (paymentData.paymentMethod === 'card') {
+      if (!paymentData.paymentDetails.card || 
+          !paymentData.paymentDetails.card.cardNumber || 
+          !paymentData.paymentDetails.card.cardHolderName) {
+        throw new Error('Missing required card payment details');
+      }
+    }
+    
+    const payment = new Payment(paymentData);
+    await payment.save();
+    return payment;
   } catch (error) {
     throw new Error('Failed to create payment: ' + error.message);
   }
 };
-
 // Fetch a payment by ID
 const getPayment = async (paymentId) => {
   try {
@@ -22,30 +29,19 @@ const getPayment = async (paymentId) => {
   }
 };
 
-
-
-
-
-
 // Get all payments
 const getAllPayments = async () => {
   try {
-    const payments = await Payment.find({});
+    const payments = await Payment.find({}); // Fetch all payments
     return payments;
   } catch (error) {
     throw new Error('Failed to fetch payments: ' + error.message);
   }
 };
 
-
-
-
-
-
 // Export the functions for use in other modules
 module.exports = {
   createPayment,
   getPayment,
-  getAllPayments,
-  getPayment,
+  getAllPayments
 };
