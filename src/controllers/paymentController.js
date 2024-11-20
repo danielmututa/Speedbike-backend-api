@@ -1,6 +1,6 @@
 const paymentService = require('../services/paymentService'); // Adjust the path as necessary
 
-// Create a new payment
+// Create a new payment or update existing one
 const createPayment = async (req, res) => {
   try {
     const paymentData = req.body; // Extract payment data from the request body
@@ -13,14 +13,13 @@ const createPayment = async (req, res) => {
       }
     }
 
-    // Proceed to create the payment if validation passes
+    // Proceed to create or update the payment if validation passes
     const newPayment = await paymentService.createPayment(paymentData);
-    res.status(201).json(newPayment); // Respond with the created payment
+    res.status(201).json(newPayment); // Respond with the created/updated payment
   } catch (error) {
     res.status(500).json({ message: 'Error creating payment', error: error.message });
   }
 };
-
 
 // Fetch a payment by ID
 const getPayment = async (req, res) => {
