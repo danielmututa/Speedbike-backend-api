@@ -25,3 +25,17 @@ router.post('/:id/attendees', eventController.addAttendee);
 router.delete('/:id/attendees', eventController.removeAttendee);
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
