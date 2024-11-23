@@ -20,7 +20,7 @@ const upload = multer({
 router.get('/search', bikeController.searchBikes);
 
 // GET all bikes available for purchase
-router.get('/available', bikeController.getBikesForPurchase);
+router.get('/available',upload.single('image'), bikeController.getBikesForPurchase);
 
 // GET all bikes for a specific user
 router.get('/user/:userId', bikeController.getBikes);
