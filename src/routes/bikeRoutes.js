@@ -4,17 +4,39 @@ const bikeController = require('../controllers/bikeController');
 const multer = require('multer');
 
 // Configure multer for image uploads
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: (req, file, cb) => {
+//       cb(null, 'uploads/');
+//     },
+//     filename: (req, file, cb) => {
+//       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//       cb(null, uniqueSuffix + '-' + file.originalname);
+//     }
+//   })
+// });
+
+
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, uniqueSuffix + '-' + file.originalname);
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+      },
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + '-' + file.originalname);
+      }
+    }),
+    fileFilter: (req, file, cb) => {
+      try {
+        validateImage(file); // Use your helper function
+        cb(null, true);
+      } catch (error) {
+        cb(new Error(error.message));
+      }
     }
-  })
-});
+  });
+  
 
 // Search route (should come before /:id to avoid conflict)
 router.get('/search', bikeController.searchBikes);
