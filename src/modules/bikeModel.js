@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const bikeSchema = new mongoose.Schema({
+  image: {
+    type: String,  // This will store the URL/path to the image
+    required: false
+  },
   serialNumber: {
     type: String,
     required: [true, 'Serial number is required'],
