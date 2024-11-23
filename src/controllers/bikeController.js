@@ -16,6 +16,9 @@ const createBike = async (req, res) => {
     }
 
     const newBike = await BikeService.createBike(bikeData);
+    if (newBike.image) {
+      newBike.image = BikeService.processImagePath(newBike.image);
+    }
     res.status(201).json(newBike);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create bike: ' + error.message });
@@ -30,6 +33,9 @@ const getBike = async (req, res) => {
     if (!bike) {
       return res.status(404).json({ message: 'Bike not found' });
     }
+    if (bike.image) {
+      bike.image = BikeService.processImagePath(bike.image);
+    }
     res.status(200).json(bike);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch bike: ' + error.message });
@@ -42,6 +48,12 @@ const getBikes = async (req, res) => {
     const userId = req.params.userId;
     const filter = req.query; // Get filter criteria from query parameters
     const bikes = await BikeService.getBikes(userId, filter);
+      // Process image paths for all bikes
+    bikes.forEach(bike => {
+      if (bike.image) {
+        bike.image = BikeService.processImagePath(bike.image);
+      }
+    });
     res.status(200).json(bikes);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch bikes: ' + error.message });
@@ -52,6 +64,12 @@ const getBikes = async (req, res) => {
 const getBikesForPurchase = async (req, res) => {
   try {
     const bikes = await BikeService.getBikesForPurchase();
+      // Process image paths for all bikes
+      bikes.forEach(bike => {
+        if (bike.image) {
+          bike.image = BikeService.processImagePath(bike.image);
+        }
+      });
     res.status(200).json(bikes);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch bikes for purchase: ' + error.message });
@@ -75,6 +93,10 @@ const updateBike = async (req, res) => {
     }
 
     const updatedBike = await BikeService.updateBike(bikeId, updateData);
+      // Process image path if available
+    if (updatedBike.image) {
+      updatedBike.image = BikeService.processImagePath(updatedBike.image);
+    }
     res.status(200).json(updatedBike);
   } catch (error) {
     res.status(500).json({ message: 'Failed to update bike: ' + error.message });
@@ -105,6 +127,12 @@ const searchBikes = async (req, res) => {
     };
 
     const bikes = await BikeService.searchBikes(searchCriteria);
+     // Process image paths for all bikes
+     bikes.forEach(bike => {
+      if (bike.image) {
+        bike.image = BikeService.processImagePath(bike.image);
+      }
+    });
     res.status(200).json(bikes);
   } catch (error) {
     res.status(500).json({ message: 'Failed to search bikes: ' + error.message });
