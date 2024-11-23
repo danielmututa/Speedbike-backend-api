@@ -56,6 +56,7 @@ app.use(errorMiddleware);
 // Connect to the database
 connectDB();
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //  ROUTES 
 // Bike Routes
