@@ -14,28 +14,60 @@ const createBike = async (bikeData) => {
 };
 
 // Get a single bike using an ID
+// const getBike = async (bikeId) => {
+//   try {
+//     const bike = await Bike.findById(bikeId);
+//     if (!bike) {
+//       throw new Error('Bike not found');
+//     }
+//     return bike;
+//   } catch (error) {
+//     throw new Error(`Error fetching bike: ${error.message}`);
+//   }
+// };
+
+
+
 const getBike = async (bikeId) => {
   try {
     const bike = await Bike.findById(bikeId);
     if (!bike) {
       throw new Error('Bike not found');
     }
+
+    // Process image path to generate a full URL
+    if (bike.image) {
+      bike.image = processImagePath(bike.image); // Adjust the image path here
+    }
+
     return bike;
   } catch (error) {
     throw new Error(`Error fetching bike: ${error.message}`);
   }
 };
 
-// Get all bikes for a user with optional search/filter criteria
+
+
 const getBikes = async (userId, filter = {}) => {
   try {
     const query = { userId, ...filter };
     const bikes = await Bike.find(query);
+
+    // Process image paths for all bikes
+    bikes.forEach(bike => {
+      if (bike.image) {
+        bike.image = processImagePath(bike.image); // Adjust the image path here
+      }
+    });
+
     return bikes;
   } catch (error) {
     throw new Error(`Error fetching bikes: ${error.message}`);
   }
 };
+
+
+
 
 // Get all bikes available for purchase
 const getBikesForPurchase = async () => {
