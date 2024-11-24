@@ -44,7 +44,7 @@ router.get('/search', bikeController.searchBikes);
 router.get('/available', bikeController.getBikesForPurchase);
 
 // GET all bikes for a specific user
-router.get('/user/:userId', upload.single('image'), bikeController.getBikes);
+router.get('/user/:userId', bikeController.getBikes);
 
 // GET a bike by ID
 router.get('/:id', bikeController.getBike);
