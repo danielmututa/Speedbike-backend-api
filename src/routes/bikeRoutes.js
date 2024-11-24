@@ -4,16 +4,30 @@ const bikeController = require('../controllers/bikeController');
 const multer = require('multer');
 const path = require('path');
 
-// Configure multer storage
+// // Configure multer storage
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, '../../uploads');
+//   },
+//   filename: (req, file, cb) => {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//     cb(null, uniqueSuffix + '-' + file.originalname);
+//   }
+// });
+
+
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, '../../uploads');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
-  }
-});
+    destination: (req, file, cb) => {
+      const uploadPath = path.resolve(__dirname, '../../uploads');
+      cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, uniqueSuffix + '-' + file.originalname);
+    }
+  });
+
 
 // Configure multer upload
 const upload = multer({
