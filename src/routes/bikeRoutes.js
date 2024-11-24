@@ -41,10 +41,10 @@ if (!fs.existsSync('uploads')) {
 router.get('/search', bikeController.searchBikes);
 
 // GET all bikes available for purchase
-router.get('/available', bikeController.getBikesForPurchase);
+router.get('/available',upload.single('image'), bikeController.getBikesForPurchase);
 
 // GET all bikes for a specific user
-router.get('/user/:userId', bikeController.getBikes);
+router.get('/user/:userId', upload.single('image'), bikeController.getBikes);
 
 // GET a bike by ID
 router.get('/:id', bikeController.getBike);
