@@ -9,6 +9,7 @@ const serverConfig = require('./src/config/serverConfig');
 const path = require('path')
 
 
+
 // Import route files
 const bikeRoutes = require('./src/routes/bikeRoutes');
 const motbookingRoutes = require('./src/routes/motbookingRoutes');
@@ -19,6 +20,7 @@ const eventRoutes = require('./src/routes/eventRoutes');
 const imageRoutes = require('./src/routes/imageRoutes')
 const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const registerRoutes = require('./src/routes/registerRoute')
+const uploadDir = path.join(__dirname, './uploads');
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 
 
@@ -59,7 +61,7 @@ connectDB();
 
 
 //  ROUTES 
-app.use('/uploads', express.static(path.join(__dirname, './uploads')));
+app.use('/uploads', express.static(uploadDir));
 
 // Bike Routes
 app.use('/api/bikes', bikeRoutes);
