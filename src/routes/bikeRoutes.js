@@ -16,10 +16,12 @@ const path = require('path');
 // });
 
 
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const uploadPath = path.resolve(__dirname, '/my-speedbike-api/uploads');
+      const uploadPath = path.join(__dirname, '../../uploads'); // Ensure this path is correct
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+      }
       cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
@@ -27,6 +29,7 @@ const storage = multer.diskStorage({
       cb(null, uniqueSuffix + '-' + file.originalname);
     }
   });
+  
 
 
 // Configure multer upload
