@@ -107,10 +107,11 @@ const updateBike = async (req, res) => {
 const deleteBike = async (req, res) => {
   try {
     const bikeId = req.params.id;
-    await BikeService.deleteBike(bikeId);
-    res.status(200).json({ message: 'Bike deleted successfully' });
+    const result = await BikeService.deleteBike(bikeId);
+    res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete bike: ' + error.message });
+    res.status(error.message.includes('not found') ? 404 : 500)
+       .json({ message: error.message });
   }
 };
 

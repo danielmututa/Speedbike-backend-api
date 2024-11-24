@@ -13,20 +13,6 @@ const createBike = async (bikeData) => {
   }
 };
 
-// Get a single bike using an ID
-// const getBike = async (bikeId) => {
-//   try {
-//     const bike = await Bike.findById(bikeId);
-//     if (!bike) {
-//       throw new Error('Bike not found');
-//     }
-//     return bike;
-//   } catch (error) {
-//     throw new Error(`Error fetching bike: ${error.message}`);
-//   }
-// };
-
-
 
 const getBike = async (bikeId) => {
   try {
@@ -119,13 +105,14 @@ const deleteBike = async (bikeId) => {
       throw new Error('Bike not found');
     }
 
-    // Delete associated image if it exists
+    // Delete the image file if it exists
     if (bike.image) {
-      const imagePath = path.join(__dirname, '..', bike.image);
+      const imagePath = path.join(__dirname, '..', 'uploads', path.basename(bike.image));
       try {
         await fs.unlink(imagePath);
       } catch (err) {
-        console.log('No image found to delete');
+        console.log('Error deleting image file:', err);
+        // Continue with bike deletion even if image deletion fails
       }
     }
 
