@@ -59,7 +59,7 @@ connectDB();
 
 
 //  ROUTES 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads/')));
 
 // Bike Routes
 app.use('/api/bikes', bikeRoutes);

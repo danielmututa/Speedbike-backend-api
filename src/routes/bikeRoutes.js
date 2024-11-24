@@ -33,8 +33,8 @@ const upload = multer({
 
 // Ensure uploads directory exists
 const fs = require('fs');
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
+if (!fs.existsSync('uploads/')) {
+  fs.mkdirSync('uploads/');
 }
 
 // Search route (should come before /:id to avoid conflict)
