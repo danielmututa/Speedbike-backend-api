@@ -7,7 +7,7 @@ const path = require('path');
 // Configure multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, '../../uploads');
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -33,8 +33,8 @@ const upload = multer({
 
 // Ensure uploads directory exists
 const fs = require('fs');
-if (!fs.existsSync('uploads/')) {
-  fs.mkdirSync('uploads/');
+if (!fs.existsSync('../../uploads')) {
+  fs.mkdirSync('../../uploads');
 }
 
 // Search route (should come before /:id to avoid conflict)
