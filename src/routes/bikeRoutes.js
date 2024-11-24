@@ -19,7 +19,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const uploadPath = path.resolve(__dirname, '../../uploads');
+      const uploadPath = path.resolve(__dirname, '/my-speedbike-api/uploads');
       cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
