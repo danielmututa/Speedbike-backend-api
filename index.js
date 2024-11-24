@@ -20,7 +20,8 @@ const eventRoutes = require('./src/routes/eventRoutes');
 const imageRoutes = require('./src/routes/imageRoutes')
 const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const registerRoutes = require('./src/routes/registerRoute')
-const uploadDir = path.join(__dirname, './uploads');
+
+const uploadDir = path.join(process.cwd(), './uploads');
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 
 
