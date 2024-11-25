@@ -5,8 +5,10 @@ const connectDB = require('./connect.DB'); // Import the database connection fun
 const cors = require('cors');
  const corsConfig = require('./src/config/corsConfig');
 const serverConfig = require('./src/config/serverConfig');
+const fs = require('fs');
 // const multer = require('multer');
 const path = require('path')
+
 
 
 
@@ -21,7 +23,9 @@ const imageRoutes = require('./src/routes/imageRoutes')
 const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const registerRoutes = require('./src/routes/registerRoute')
 
-const uploadDir = path.join(process.cwd(), './uploads');
+// Define uploads directory path correctly
+const uploadDir = path.join(__dirname, 'uploads');
+
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 
 
@@ -46,26 +50,22 @@ app.use(express.json()); // Middleware to parse JSON
 // Error handling middleware
 app.use(errorMiddleware);
 
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//       cb(null, 'uploads/');
-//     },
-//     filename: (req, file, cb) => {
-//       cb(null, file.originalname);
-//     },
-//   });
-
-
 // Connect to the database
 connectDB();
 
+
+// Create uploads directory if it doesn't exist
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 
 //  ROUTES 
 // app.use('/uploads', express.static(uploadDir));
 
+app.use('/uploads', express.static(uploadDir));
 // Bike Routes
-app.use('/api/bikes', bikeRoutes,express.static(uploadDir));
+app.use('/api/bikes', bikeRoutes);
 
 // Mot Routes
 app.use('/api/motbookings', motbookingRoutes);
