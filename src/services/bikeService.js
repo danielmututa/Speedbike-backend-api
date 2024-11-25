@@ -56,22 +56,14 @@ const getBikes = async (userId, filter = {}) => {
 
 
 // Get all bikes available for purchase
-// Get all bikes available for purchase
 const getBikesForPurchase = async () => {
   try {
     const bikes = await Bike.find();
-    // Add logging to debug image paths
-    console.log('Fetched bikes:', bikes.map(bike => ({
-      id: bike._id,
-      imagePath: bike.image
-    })));
     return bikes;
   } catch (error) {
-    console.error('Error in getBikesForPurchase:', error);
     throw new Error(`Error fetching bikes for purchase: ${error.message}`);
   }
 };
-
 
 // Update bike info including image
 const updateBike = async (bikeId, updateData) => {
@@ -80,7 +72,7 @@ const updateBike = async (bikeId, updateData) => {
     if (updateData.image) {
       const existingBike = await Bike.findById(bikeId);
       if (existingBike && existingBike.image) {
-        const oldImagePath = path.join(__dirname, '.', existingBike.image);
+        const oldImagePath = path.join(__dirname, '..', existingBike.image);
         try {
           await fs.unlink(oldImagePath);
         } catch (err) {
@@ -115,7 +107,7 @@ const deleteBike = async (bikeId) => {
 
     // Delete the image file if it exists
     if (bike.image) {
-      const imagePath = path.join(__dirname, '.', 'uploads', path.basename(bike.image));
+      const imagePath = path.join(__dirname, '.', '/uploads', path.basename(bike.image));
       try {
         await fs.unlink(imagePath);
       } catch (err) {
@@ -150,16 +142,9 @@ const validateImage = (file) => {
 // Helper function to process image path
 const processImagePath = (imagePath) => {
   if (!imagePath) return null;
-  
-  // Remove any './' from the start of the path
-  const cleanPath = imagePath.replace(/^\.\//, '');
-  
-  // Make sure the path starts with '/uploads/'
-  if (!cleanPath.startsWith('uploads/')) {
-    return `/uploads/${path.basename(cleanPath)}`;
-  }
-  
-  return `/${cleanPath}`;
+  // Convert backslashes to forward slashes and ensure proper path
+  const processedPath = `/uploads/${path.basename(imagePath)}`;
+  return processedPath;
 };
 
 // Search bikes by criteria
