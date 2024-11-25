@@ -38,7 +38,7 @@ const upload = multer({
 
 // Create uploads directory if it doesn't exist
 const fs = require('fs');
-const uploadDir = path.join(__dirname, '../uploads');
+const uploadDir = path.join(__dirname, '../../src/uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -50,10 +50,12 @@ if (!fs.existsSync(uploadDir)) {
 router.get('/search', bikeController.searchBikes);
 
 // GET all bikes available for purchase
-router.get('/available',upload.single('image'), bikeController.getBikesForPurchase);
+router.get('/available', bikeController.getBikesForPurchase);
 
 // GET all bikes for a specific user
 router.get('/user/:userId', bikeController.getBikes);
+
+router.get('/images', bikeController.getAllImages);
 
 // GET a bike by ID
 router.get('/:id', bikeController.getBike);

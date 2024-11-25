@@ -55,6 +55,27 @@ const getBikes = async (userId, filter = {}) => {
 
 
 
+// Get all images in the uploads directory
+const getAllImages = async () => {
+  try {
+    const directoryPath = path.join(__dirname, '..', '..', 'uploads');
+    const files = await fs.readdir(directoryPath); // Read files in the uploads directory
+    
+    // Filter only image files (adjust file extensions if necessary)
+    const imageFiles = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+    
+    // Process image paths and return them
+    const imagePaths = imageFiles.map(file => processImagePath(file));
+    return imagePaths;
+  } catch (error) {
+    throw new Error(`Error fetching images: ${error.message}`);
+  }
+}
+
+
+
+
+
 // Get all bikes available for purchase
 const getBikesForPurchase = async () => {
   try {
@@ -181,5 +202,6 @@ module.exports = {
   deleteBike,
   validateImage,
   processImagePath,
-  searchBikes
+  searchBikes,
+  getAllImages
 };
