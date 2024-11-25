@@ -56,7 +56,7 @@ const getBikes = async (userId, filter = {}) => {
 
 
 // Get all images in the uploads directory
-const getAllImages = async () => {
+const getAllImages = async (req, res) => {
   try {
     const directoryPath = path.join(__dirname, '..', '..', 'uploads');
     const files = await fs.readdir(directoryPath); // Read files in the uploads directory
@@ -66,11 +66,11 @@ const getAllImages = async () => {
     
     // Process image paths and return them
     const imagePaths = imageFiles.map(file => processImagePath(file));
-    return imagePaths;
+    res.status(200).json(imagePaths);
   } catch (error) {
-    throw new Error(`Error fetching images: ${error.message}`);
+    res.status(500).json({ message: 'Failed to fetch images: ' + error.message });
   }
-}
+};
 
 
 
