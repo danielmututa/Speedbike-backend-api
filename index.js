@@ -61,11 +61,11 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
 
 
 // Bike Routes
-app.use('/api/bikes', bikeRoutes,express.static(path.join(__dirname, 'src', 'uploads')));
+app.use('/api/bikes', bikeRoutes);
 
 // Mot Routes
 app.use('/api/motbookings', motbookingRoutes);
