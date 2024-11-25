@@ -5,10 +5,8 @@ const connectDB = require('./connect.DB'); // Import the database connection fun
 const cors = require('cors');
  const corsConfig = require('./src/config/corsConfig');
 const serverConfig = require('./src/config/serverConfig');
-const fs = require('fs');
 // const multer = require('multer');
 const path = require('path')
-
 
 
 
@@ -24,7 +22,7 @@ const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const registerRoutes = require('./src/routes/registerRoute')
 
 // Define uploads directory path correctly
-const uploadDir = path.join(__dirname, './src/uploads');
+const uploadDir = path.join(__dirname, './uploads');
 
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 
@@ -55,16 +53,17 @@ connectDB();
 
 
 // Create uploads directory if it doesn't exist
+const fs = require('fs');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 
-
-
+//  ROUTES 
+// app.use('/uploads', express.static(uploadDir));
 
 // Bike Routes
-app.use('/api/bikes', bikeRoutes, express.static(uploadDir));
+app.use('/api/bikes', bikeRoutes,express.static(uploadDir));
 
 // Mot Routes
 app.use('/api/motbookings', motbookingRoutes);
