@@ -164,11 +164,15 @@ const validateImage = (file) => {
 const processImagePath = (imagePath) => {
   if (!imagePath) return null;
 
-  // Extract the filename from the path
-  const filename = imagePath.split('/').pop(); // Get the last part of the path
-  return `https://speedbike-backend-api-production.up.railway.app/uploads/${filename}`;
-};
+  // Use the path module to extract the filename
+  const filename = path.basename(imagePath);
 
+  // Remove the /uploads/ directory from the filename
+  const cleanFilename = filename.replace('/uploads/', '');
+
+  // Construct the full URL
+  return `https://speedbike-backend-api-production.up.railway.app/api/bikes/images/${cleanFilename}`;
+};
 
 
 

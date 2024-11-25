@@ -62,7 +62,7 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 // app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
-app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
+
 
 // Bike Routes
 app.use('/api/bikes', bikeRoutes,express.static(path.join(__dirname, 'src', 'uploads')));
