@@ -161,11 +161,12 @@ const validateImage = (file) => {
 };
 
 
-
 const processImagePath = (imagePath) => {
   if (!imagePath) return null;
-  // Return full URL
-  return `https://speedbike-backend-api-production.up.railway.app/${imagePath}`;
+
+  // Extract the filename from the path
+  const filename = imagePath.split('/').pop(); // Get the last part of the path
+  return `https://speedbike-backend-api-production.up.railway.app/uploads/${filename}`;
 };
 
 
