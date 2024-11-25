@@ -1,30 +1,38 @@
 const BikeService = require('../services/bikeService');
 
 // Handler for creating a bike
+// In bikeController.js
 const createBike = async (req, res) => {
   try {
-    const bikeData = req.body;
-    
-    if (req.file) {
-      try {
-        BikeService.validateImage(req.file);
-        // Store relative path in database
-        bikeData.image = `uploads/${req.file.filename}`;
-      } catch (error) {
-        return res.status(400).json({ message: error.message });
+      const bikeData = req.body;
+      console.log('Received bike data:', bikeData); // Add logging
+      
+      if (req.file) {
+          try {
+              console.log('Received file:', req.file); // Add logging
+              BikeService.validateImage(req.file);
+              bikeData.image = `uploads/${req.file.filename}`;
+          } catch (error) {
+              console.error('Image validation error:', error); // Add logging
+              return res.status(400).json({ message: error.message });
+          }
       }
-    }
 
-    const newBike = await BikeService.createBike(bikeData);
-    // Process image path for response
-    if (newBike.image) {
-      newBike.image = BikeService.processImagePath(newBike.image);
-    }
-    res.status(201).json(newBike);
+      const newBike = await BikeService.createBike(bikeData);
+      console.log('Created bike:', newBike); // Add logging
+      
+      if (newBike.image) {
+          newBike.image = BikeService.processImagePath(newBike.image);
+      }
+      res.status(201).json(newBike);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to create bike: ' + error.message });
+      console.error('Error in createBike:', error); // Add logging
+      res.status(500).json({ message: 'Failed to create bike: ' + error.message });
   }
 };
+
+
+
 // Handler for fetching a bike by ID
 const getBike = async (req, res) => {
   try {
