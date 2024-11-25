@@ -7,7 +7,7 @@ const path = require('path');
 // // Configure multer storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.join(__dirname, '.', 'uploads'));
+      cb(null, path.join(__dirname, './uploads'));
     },
     filename: (req, file, cb) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -20,19 +20,21 @@ const storage = multer.diskStorage({
   
 
 
-  const upload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
-      if (!allowedTypes.includes(file.mimetype)) {
-        return cb(new Error('Only .jpeg, .png, .gif and .jpg format allowed!'), false);
-      }
-      cb(null, true);
-    },
-    limits: {
-      fileSize: 5 * 1024 * 1024
+// Configure multer upload
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    // Allow only specific file types
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      return cb(new Error('Only .jpeg, .png , .gif and .jpg format allowed!'), false);
     }
-  });
+    cb(null, true);
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB max file size
+  }
+});
 
 // Ensure uploads directory exists
 const fs = require('fs');
