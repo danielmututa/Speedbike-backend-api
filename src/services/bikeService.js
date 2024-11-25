@@ -167,13 +167,9 @@ const processImagePath = (imagePath) => {
   // Use the path module to extract the filename
   const filename = path.basename(imagePath);
 
-  // Remove the /uploads/ directory from the filename
-  const cleanFilename = filename.replace('/uploads/', '');
-
   // Construct the full URL
-  return `https://speedbike-backend-api-production.up.railway.app/api/bikes/images/${cleanFilename}`;
+  return `https://speedbike-backend-api-production.up.railway.app/api/bikes/images/${filename}`;
 };
-
 
 
 // Search bikes by criteria
