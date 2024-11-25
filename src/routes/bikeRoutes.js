@@ -60,7 +60,7 @@ router.post('/', upload.single('image'), bikeController.createBike);
 // PUT update bike info with image
 router.put('/:id', upload.single('image'), bikeController.updateBike);
 
-// DELETE a bike by ID
+// DELETE a bike by Id
 router.delete('/:id', bikeController.deleteBike);
 
 // Error handling middleware
@@ -72,5 +72,6 @@ router.use((error, req, res, next) => {
   }
   next(error);
 });
+
 
 module.exports = router;
