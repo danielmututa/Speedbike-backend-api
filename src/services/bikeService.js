@@ -143,7 +143,7 @@ const validateImage = (file) => {
 const processImagePath = (imagePath) => {
   if (!imagePath) return null;
   // Convert backslashes to forward slashes and ensure proper path
-  const processedPath = `../uploads/${path.basename(imagePath)}`;
+  const processedPath = `./uploads/${path.basename(imagePath)}`;
   return processedPath;
 };
 
