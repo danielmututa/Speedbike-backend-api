@@ -80,7 +80,7 @@ const updateBike = async (bikeId, updateData) => {
     if (updateData.image) {
       const existingBike = await Bike.findById(bikeId);
       if (existingBike && existingBike.image) {
-        const oldImagePath = path.join(__dirname, '..', existingBike.image);
+        const oldImagePath = path.join(__dirname, '.', existingBike.image);
         try {
           await fs.unlink(oldImagePath);
         } catch (err) {
@@ -115,7 +115,7 @@ const deleteBike = async (bikeId) => {
 
     // Delete the image file if it exists
     if (bike.image) {
-      const imagePath = path.join(__dirname, '..', './uploads', path.basename(bike.image));
+      const imagePath = path.join(__dirname, '.', 'uploads', path.basename(bike.image));
       try {
         await fs.unlink(imagePath);
       } catch (err) {
