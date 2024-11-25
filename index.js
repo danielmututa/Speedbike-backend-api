@@ -24,7 +24,7 @@ const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const registerRoutes = require('./src/routes/registerRoute')
 
 // Define uploads directory path correctly
-const uploadDir = path.join(__dirname, './src/uploads');
+const uploadDir = path.join(__dirname, './uploads');
 
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 
