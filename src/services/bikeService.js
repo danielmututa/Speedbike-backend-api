@@ -161,7 +161,7 @@ const validateImage = (file) => {
 };
 
 
-const processImagePath = (imagePath) => {
+cconst processImagePath = (imagePath) => {
   if (!imagePath) return null;
 
   // Use the path module to extract the filename
@@ -170,8 +170,6 @@ const processImagePath = (imagePath) => {
   // Construct the full URL
   return `https://speedbike-backend-api-production.up.railway.app/api/bikes/images/${filename}`;
 };
-
-
 // Search bikes by criteria
 const searchBikes = async (criteria) => {
   try {
