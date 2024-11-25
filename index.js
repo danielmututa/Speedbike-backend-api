@@ -63,9 +63,9 @@ if (!fs.existsSync(uploadDir)) {
 //  ROUTES 
 // app.use('/uploads', express.static(uploadDir));
 
-app.use('/uploads', express.static(uploadDir));
+
 // Bike Routes
-app.use('/api/bikes', bikeRoutes);
+app.use('/api/bikes', bikeRoutes, express.static(uploadDir));
 
 // Mot Routes
 app.use('/api/motbookings', motbookingRoutes);
