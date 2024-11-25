@@ -127,17 +127,7 @@ const searchBikes = async (req, res) => {
     };
 
 
-    // Handler for getting all images
-const getAllImages = async (req, res) => {
-  try {
-    const imagePaths = await BikeService.getAllImages();
-    res.status(200).json(imagePaths);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch images: ' + error.message });
-  }
-};
-
-
+  
     const bikes = await BikeService.searchBikes(searchCriteria);
      // Process image paths for all bikes
      bikes.forEach(bike => {
@@ -151,6 +141,22 @@ const getAllImages = async (req, res) => {
   }
 };
 
+// Handler for getting all images
+const getAllImages = async (req, res) => {
+  try {
+    // Fetch all bikes to get their images
+    const bikes = await BikeService.getBikesForPurchase();
+    
+    // Extract and map the image paths
+    const images = bikes.map(bike => bike.image).filter(image => image);
+
+    // Return the image paths
+    res.status(200).json(images);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch images: ' + error.message });
+  }
+};
+
 module.exports = {
   createBike,
   getBike,
@@ -159,5 +165,5 @@ module.exports = {
   updateBike,
   deleteBike,
   searchBikes,
-  getAllImages // Exposing the new handler
+   getAllImages // Exposing the new handler
 };
