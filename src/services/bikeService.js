@@ -161,7 +161,7 @@ const validateImage = (file) => {
 };
 
 
-cconst processImagePath = (imagePath) => {
+const processImagePath = (imagePath) => {
   if (!imagePath) return null;
 
   // Use the path module to extract the filename
