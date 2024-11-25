@@ -107,7 +107,7 @@ const deleteBike = async (bikeId) => {
 
     // Delete the image file if it exists
     if (bike.image) {
-      const imagePath = path.join(__dirname, '.', '/uploads', path.basename(bike.image));
+      const imagePath = path.join(__dirname, '.', 'uploads', path.basename(bike.image));
       try {
         await fs.unlink(imagePath);
       } catch (err) {
@@ -129,7 +129,7 @@ const validateImage = (file) => {
   const maxSize = 5 * 1024 * 1024; // 5MB
 
   if (!allowedTypes.includes(file.mimetype)) {
-    throw new Error('Invalid file type. Only JPEG, PNG GIF and JPG are allowed');
+    throw new Error('Invalid file type. Only JPEG, PNG GIF and JPG, are allowed');
   }
 
   if (file.size > maxSize) {
@@ -143,7 +143,7 @@ const validateImage = (file) => {
 const processImagePath = (imagePath) => {
   if (!imagePath) return null;
   // Convert backslashes to forward slashes and ensure proper path
-  const processedPath = `/uploads/${path.basename(imagePath)}`;
+  const processedPath = `./uploads/${path.basename(imagePath)}`;
   return processedPath;
 };
 
