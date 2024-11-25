@@ -161,11 +161,14 @@ const validateImage = (file) => {
 };
 
 
+
 const processImagePath = (imagePath) => {
   if (!imagePath) return null;
-  // Return URL-friendly path
-  return `/uploads/${path.basename(imagePath)}`;
+  // Return full URL
+  return `https://speedbike-backend-api-production.up.railway.app/${imagePath}`;
 };
+
+
 
 
 // Search bikes by criteria
