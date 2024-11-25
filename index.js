@@ -7,6 +7,7 @@ const cors = require('cors');
 const serverConfig = require('./src/config/serverConfig');
 // const multer = require('multer');
 const path = require('path')
+const fs = require('fs');
 
 
 
@@ -21,8 +22,12 @@ const imageRoutes = require('./src/routes/imageRoutes')
 const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const registerRoutes = require('./src/routes/registerRoute')
 
-// Define uploads directory path correctly
-const uploadDir = path.join(__dirname, './uploads');
+// Create uploads directory
+const uploadDir = path.join(__dirname, 'src', 'uploads');
+
+
+
+
 
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 
@@ -52,18 +57,14 @@ app.use(errorMiddleware);
 connectDB();
 
 
-// Create uploads directory if it doesn't exist
-const fs = require('fs');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-
-//  ROUTES 
-// app.use('/uploads', express.static(uploadDir));
+// app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
 
 // Bike Routes
-app.use('/api/bikes', bikeRoutes,express.static(uploadDir));
+app.use('/api/bikes', bikeRoutes,express.static(path.join(__dirname, 'src', 'uploads')));
 
 // Mot Routes
 app.use('/api/motbookings', motbookingRoutes);
@@ -111,3 +112,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });                  
 module.exports = app;
+
