@@ -8,7 +8,6 @@ const serverConfig = require('./src/config/serverConfig');
 const fs = require('fs');
 // const multer = require('multer');
 const path = require('path')
-const multer = require('multer');
 
 
 
@@ -25,7 +24,7 @@ const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const registerRoutes = require('./src/routes/registerRoute')
 
 // Define uploads directory path correctly
-const uploadDir = path.join(__dirname, './uploads');
+const uploadDir = path.join(__dirname, './src/uploads');
 
 const errorMiddleware = require('./src/middleware/errorMiddleware');
 
@@ -55,19 +54,6 @@ app.use(errorMiddleware);
 connectDB();
 
 
-// Update multer storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-      cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, uniqueSuffix + '-' + file.originalname);
-  }
-});
-
-
-
 // Create uploads directory if it doesn't exist
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -78,7 +64,7 @@ if (!fs.existsSync(uploadDir)) {
 
 
 // Bike Routes
-app.use('/api/bikes', bikeRoutes, express.static(path.join(__dirname, './uploads')));
+app.use('/api/bikes', bikeRoutes, express.static(uploadDir));
 
 // Mot Routes
 app.use('/api/motbookings', motbookingRoutes);
