@@ -25,7 +25,7 @@ const bikeSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Bike type is required'],
     enum: {
-      values: ['BMW', 'Yamaha', 'Honda', 'Kawasaki', 'Ducati'],
+      values: ['Roadbike', 'Quadbike', 'Offroad', 'Dirtbike'],
       message: '{VALUE} is not a supported bike type'
     }
   },
