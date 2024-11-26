@@ -144,16 +144,24 @@ const searchBikes = async (req, res) => {
 // Handler for getting all images
 const getAllImages = async (req, res) => {
   try {
-    // Fetch all bikes to get their images
-    const bikes = await BikeService.getBikesForPurchase();
+    const directoryPath = path.join(__dirname, '../uploads');
+    const files = await fs.promises.readdir(directoryPath);
     
-    // Extract and map the image paths
-    const images = bikes.map(bike => bike.image).filter(image => image);
+    // Filter for image files
+    const imageFiles = files.filter(file => 
+      /\.(jpg|jpeg|png|gif)$/i.test(file)
+    );
+    
+    // Process each image path
+    const imagePaths = imageFiles.map(file => {
+      return processImagePath(file);
+    });
 
-    // Return the image paths
-    res.status(200).json(images);
+    res.status(200).json(imagePaths);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch images: ' + error.message });
+    res.status(500).json({ 
+      message: 'Failed to fetch images: ' + error.message 
+    });
   }
 };
 

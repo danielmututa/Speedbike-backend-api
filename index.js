@@ -8,7 +8,7 @@ const serverConfig = require('./src/config/serverConfig');
 // const multer = require('multer');
 const path = require('path')
 const fs = require('fs');
-
+const uploadDir = path.join(__dirname, 'src', 'uploads');
 
 
 // Import route files
@@ -23,7 +23,7 @@ const eventimageRoutes = require('./src/routes/eventimageRoutes')
 const registerRoutes = require('./src/routes/registerRoute')
 
 // Create uploads directory
-const uploadDir = path.join(__dirname, 'src', 'uploads');
+
 
 
 
@@ -59,13 +59,14 @@ connectDB();
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
+  console.log('Created uploads directory');
 }
 
 app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
 
 
 // Bike Routes
-app.use('/api/bikes', bikeRoutes);
+app.use('/api/bikes', bikeRoutes, express.static(path.join(__dirname, 'src', 'uploads')));
 
 // Mot Routes
 app.use('/api/motbookings', motbookingRoutes);

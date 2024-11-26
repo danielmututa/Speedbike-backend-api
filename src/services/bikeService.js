@@ -58,7 +58,7 @@ const getBikes = async (userId, filter = {}) => {
 // Get all images in the uploads directory
 const getAllImages = async (req, res) => {
   try {
-    const directoryPath = path.join(__dirname, '..', '..', 'uploads');
+    const directoryPath = path.join(__dirname, '..', 'uploads');
     const files = await fs.readdir(directoryPath); // Read files in the uploads directory
     
     // Filter only image files (adjust file extensions if necessary)
@@ -128,7 +128,7 @@ const deleteBike = async (bikeId) => {
 
     // Delete the image file if it exists
     if (bike.image) {
-      const imagePath = path.join(__dirname, '..','..', 'uploads', path.basename(bike.image));
+      const imagePath = path.join(__dirname, '..', 'uploads', path.basename(bike.image));
       try {
         await fs.unlink(imagePath);
       } catch (err) {
@@ -160,16 +160,26 @@ const validateImage = (file) => {
   return true;
 };
 
-
 const processImagePath = (imagePath) => {
   if (!imagePath) return null;
 
-  // Extract the filename from the image path
-  const filename = path.basename(imagePath);
+  // If the image path is already a full URL, return it as is
+  if (/^https?:\/\//i.test(imagePath)) {
+    return imagePath;
+  }
 
-  // Construct the full URL to match the `/uploads` route
-  return `https://speedbike-backend-api-production.up.railway.app/uploads/${filename}`;
+  // Get just the filename from the path
+  const normalizedPath = path.basename(imagePath);
+
+  // Use environment variable to determine the base URL
+  const baseUrl = process.env.NODE_ENV === 'production'
+    ? 'https://speedbike-backend-api-production.up.railway.app'
+    : 'http://localhost:5000';
+
+  return `${baseUrl}/uploads/${normalizedPath}`;
 };
+
+
 
 
 
