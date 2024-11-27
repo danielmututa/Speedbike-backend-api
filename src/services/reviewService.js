@@ -1,28 +1,30 @@
-const Review = require('../modules/reviewModel'); // Adjust the path as necessary
+const Review = require('../modules/reviewModel');
 
-// Create a new review
 const createReview = async (reviewData) => {
   try {
-    const review = new Review(reviewData); // Create a new review instance
-    await review.save(); // Save the review to the database
-    return review; // Return the created review
+    console.log('Creating review with data:', reviewData); // Debug log
+    const review = new Review(reviewData);
+    await review.save();
+    return review;
   } catch (error) {
-    throw new Error('Failed to create review: ' + error.message); // Handle errors
+    console.error('Error in createReview service:', error); // Debug log
+    throw new Error('Failed to create review: ' + error.message);
   }
 };
 
-// Fetch all reviews made for a specific bike
 const getReviewsForBikes = async (bikeId) => {
   try {
-    const reviews = await Review.find({ bikeId }); // Fetch reviews by bike ID
-    return reviews; // Return the list of reviews
+    console.log('Fetching reviews for bikeId:', bikeId); // Debug log
+    const reviews = await Review.find({ bikeId }).sort({ createdAt: -1 });
+    console.log('Found reviews:', reviews); // Debug log
+    return reviews;
   } catch (error) {
-    throw new Error('Failed to fetch reviews: ' + error.message); // Handle errors
+    console.error('Error in getReviewsForBikes service:', error); // Debug log
+    throw new Error('Failed to fetch reviews: ' + error.message);
   }
 };
 
-// Export the functions for use in other modules
 module.exports = {
   createReview,
-  getReviewsForBikes, // Export the function to fetch reviews for bikes
+  getReviewsForBikes,
 };

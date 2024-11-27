@@ -1,28 +1,54 @@
-const reviewService = require('../services/reviewService'); // Adjust the path as necessary
+const reviewService = require('../services/reviewService');
 
-// Create a new review
 const createReview = async (req, res) => {
   try {
-    const reviewData = req.body; // Extract review data from the request body
-    const newReview = await reviewService.createReview(reviewData); // Call the service to create a review
-    res.status(201).json(newReview); // Respond with the created review
+    console.log('Received review data:', req.body); // Debug log
+    const reviewData = req.body;
+    
+    // Validate required fields
+    if (!reviewData.bikeId || !reviewData.name || !reviewData.email || !reviewData.message || !reviewData.stars) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const newReview = await reviewService.createReview(reviewData);
+    res.status(201).json({
+      success: true,
+      review: newReview
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating review', error: error.message }); // Handle errors
+    console.error('Controller error creating review:', error); // Debug log
+    res.status(500).json({ 
+      success: false,
+      message: 'Error creating review', 
+      error: error.message 
+    });
   }
 };
 
-// Fetch all reviews made for a specific bike
 const getReviewsForBikes = async (req, res) => {
   try {
-    const bikeId = req.params.id; // Extract bike ID from the request parameters
-    const reviews = await reviewService.getReviewsForBikes(bikeId); // Call the service to fetch reviews
-    res.status(200).json(reviews); // Respond with the list of reviews
+    const bikeId = req.params.id;
+    console.log('Fetching reviews for bikeId:', bikeId); // Debug log
+
+    if (!bikeId) {
+      return res.status(400).json({ message: 'Bike ID is required' });
+    }
+
+    const reviews = await reviewService.getReviewsForBikes(bikeId);
+    res.status(200).json({
+      success: true,
+      reviews: reviews
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching reviews', error: error.message }); // Handle errors
+    console.error('Controller error fetching reviews:', error); // Debug log
+    res.status(500).json({ 
+      success: false,
+      message: 'Error fetching reviews', 
+      error: error.message 
+    });
   }
 };
 
-// Export the functions for use in other modules
 module.exports = {
   createReview,
   getReviewsForBikes,
