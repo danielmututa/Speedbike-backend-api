@@ -1,5 +1,5 @@
+// src/modules/registerModel.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
 const registerSchema = new mongoose.Schema({
   name: {
@@ -17,6 +17,10 @@ const registerSchema = new mongoose.Schema({
   },
 });
 
+module.exports = mongoose.model('Register', registerSchema);
+
+
+
 // Virtual field for confirmPassword (not persisted in the database)
 registerSchema.virtual('confirmPassword')
   .set(function (value) {
@@ -26,24 +30,22 @@ registerSchema.virtual('confirmPassword')
     return this._confirmPassword;
   });
 
-// Custom validation for confirmPassword
-registerSchema.pre('validate', function (next) {
-  if (this._confirmPassword && this._confirmPassword !== this.password) {
-    this.invalidate('confirmPassword', 'Passwords do not match.');
-  }
-  next();
-});
+// // Custom validation for confirmPassword
+// registerSchema.pre('validate', function (next) {
+//   if (this._confirmPassword && this._confirmPassword !== this.password) {
+//     this.invalidate('confirmPassword', 'Passwords do not match.');
+//   }
+//   next();
+// });
 
-// Pre-save hook to hash the password
-registerSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+// // Pre-save hook to hash the password
+// registerSchema.pre('save', async function (next) {
+//   if (!this.isModified('password')) return next();
 
-  try {
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-module.exports = mongoose.model('Register', registerSchema);
+//   try {
+//     this.password = await bcrypt.hash(this.password, 10);
+//     next();
+//   } catch (error) {
+//     next(error);
+//   }
+// });

@@ -8,17 +8,11 @@ const jwt = require('jsonwebtoken');
  * @access Public
  */
 exports.registerUser = async (req, res) => {
-  const { name, email, password, confirmPassword } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!name || !email || !password || !confirmPassword) {
+  if (!name || !email || !password) {
     return res.status(400).json({ message: 'All fields are required.' });
   }
-
-    // Ensure password matches confirmPassword
-  if (password !== confirmPassword) {
-    return res.status(400).json({ message: 'Passwords do not match.' });
-  }
-
 
   try {
     const existingUser = await RegisterModel.findOne({ email });
@@ -54,7 +48,7 @@ exports.loginUser = async (req, res) => {
   try {
     const user = await RegisterModel.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found. Sign up to explore our option' });
+      return res.status(404).json({ message: 'User not found.' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
