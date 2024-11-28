@@ -1,14 +1,30 @@
 const reviewService = require('../services/reviewService');
 
+
 const createReview = async (req, res) => {
   try {
-    console.log('Received review data:', req.body); // Debug log
+    console.log('Received review data:', req.body);
     const reviewData = req.body;
-    
+
     // Validate required fields
-    if (!reviewData.bikeId || !reviewData.name || !reviewData.email || !reviewData.message || !reviewData.stars) {
-      return res.status(400).json({ message: 'Missing required fields' });
+    if (!reviewData.bikeId || !reviewData.name || !reviewData.email || 
+        !reviewData.message || !reviewData.stars) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Missing required fields' 
+      });
     }
+
+    // Validate bikeId format
+    if (!mongoose.Types.ObjectId.isValid(reviewData.bikeId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid bike ID format'
+      });
+    }
+
+    // Convert bikeId to ObjectId
+    reviewData.bikeId = new mongoose.Types.ObjectId(reviewData.bikeId);
 
     const newReview = await reviewService.createReview(reviewData);
     res.status(201).json({
@@ -16,11 +32,11 @@ const createReview = async (req, res) => {
       review: newReview
     });
   } catch (error) {
-    console.error('Controller error creating review:', error); // Debug log
-    res.status(500).json({ 
+    console.error('Controller error creating review:', error);
+    res.status(500).json({
       success: false,
-      message: 'Error creating review', 
-      error: error.message 
+      message: 'Error creating review',
+      error: error.message
     });
   }
 };
