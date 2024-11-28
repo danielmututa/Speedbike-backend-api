@@ -2,36 +2,42 @@ const Review = require('../modules/reviewModel');
 
 const createReview = async (reviewData) => {
   try {
-    console.log('Creating review with data:', reviewData); // Debug log
+    console.log('Creating review with data:', reviewData);
     const review = new Review(reviewData);
     await review.save();
     return review;
   } catch (error) {
-    console.error('Error in createReview service:', error); // Debug log
+    console.error('Error in createReview service:', error);
     throw new Error('Failed to create review: ' + error.message);
   }
 };
 
-const getReviewsForBikes = async (bikeId) => {
+const getReviewsForBikes = async () => {
   try {
-    console.log('Fetching reviews for bikeId:', bikeId); // Debug log
-    const reviews = await Review.find({ bikeId }).sort({ createdAt: -1 });
-    console.log('Found reviews:', reviews); // Debug log
+    const reviews = await Review.find().sort({ createdAt: -1 });
+    console.log('Found reviews:', reviews);
     return reviews;
   } catch (error) {
-    console.error('Error in getReviewsForBikes service:', error); // Debug log
+    console.error('Error in getReviewsForBikes service:', error);
     throw new Error('Failed to fetch reviews: ' + error.message);
   }
 };
 
-// In your review service
 const addReplyToReview = async (reviewId, ownerResponse) => {
-  const review = await Review.findByIdAndUpdate(
-    reviewId,
-    { ownerResponse },
-    { new: true }
-  );
-  return review;
+  try {
+    const review = await Review.findByIdAndUpdate(
+      reviewId,
+      { ownerResponse },
+      { new: true }
+    );
+    if (!review) {
+      throw new Error('Review not found');
+    }
+    return review;
+  } catch (error) {
+    console.error('Error in addReplyToReview service:', error);
+    throw new Error('Failed to add reply: ' + error.message);
+  }
 };
 
 module.exports = {

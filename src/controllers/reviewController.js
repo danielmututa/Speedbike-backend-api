@@ -1,30 +1,17 @@
 const reviewService = require('../services/reviewService');
 
-
 const createReview = async (req, res) => {
   try {
     console.log('Received review data:', req.body);
     const reviewData = req.body;
 
     // Validate required fields
-    if (!reviewData.bikeId || !reviewData.name || !reviewData.email || 
-        !reviewData.message || !reviewData.stars) {
-      return res.status(400).json({ 
-        success: false,
-        message: 'Missing required fields' 
-      });
-    }
-
-    // Validate bikeId format
-    if (!mongoose.Types.ObjectId.isValid(reviewData.bikeId)) {
+    if (!reviewData.name || !reviewData.email || !reviewData.message || !reviewData.stars) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid bike ID format'
+        message: 'Missing required fields'
       });
     }
-
-    // Convert bikeId to ObjectId
-    reviewData.bikeId = new mongoose.Types.ObjectId(reviewData.bikeId);
 
     const newReview = await reviewService.createReview(reviewData);
     res.status(201).json({
@@ -43,32 +30,24 @@ const createReview = async (req, res) => {
 
 const getReviewsForBikes = async (req, res) => {
   try {
-    const bikeId = req.params.id;
-    console.log('Fetching reviews for bikeId:', bikeId); // Debug log
-
-    if (!bikeId) {
-      return res.status(400).json({ message: 'Bike ID is required' });
-    }
-
-    const reviews = await reviewService.getReviewsForBikes(bikeId);
+    const reviews = await reviewService.getReviewsForBikes();
     res.status(200).json({
       success: true,
       reviews: reviews
     });
   } catch (error) {
-    console.error('Controller error fetching reviews:', error); // Debug log
-    res.status(500).json({ 
+    console.error('Controller error fetching reviews:', error);
+    res.status(500).json({
       success: false,
-      message: 'Error fetching reviews', 
-      error: error.message 
+      message: 'Error fetching reviews',
+      error: error.message
     });
   }
 };
 
-// In your review controller
 const addReplyToReview = async (req, res) => {
   try {
-    const { reviewId } = req.params; // Access reviewId from req.params
+    const { reviewId } = req.params;
     const { ownerResponse } = req.body;
 
     if (!ownerResponse) {
@@ -90,8 +69,6 @@ const addReplyToReview = async (req, res) => {
     });
   }
 };
-
-
 
 module.exports = {
   createReview,

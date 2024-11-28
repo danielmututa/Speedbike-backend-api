@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-  bikeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Bike'  // Reference to your Bike model
-  },
   name: {
     type: String,
     required: true
