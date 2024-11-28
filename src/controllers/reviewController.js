@@ -52,7 +52,7 @@ const getReviewsForBikes = async (req, res) => {
 // In your review controller
 const addReplyToReview = async (req, res) => {
   try {
-    const reviewId = req.params.reviewId;
+    const { reviewId } = req.params; // Access reviewId from req.params
     const { ownerResponse } = req.body;
 
     if (!ownerResponse) {
@@ -74,7 +74,6 @@ const addReplyToReview = async (req, res) => {
     });
   }
 };
-
 
 
 

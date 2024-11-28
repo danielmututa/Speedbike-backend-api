@@ -11,7 +11,7 @@ router.get('/bikes/:id', reviewController.getReviewsForBikes);
 
 
 // In your routes file
-router.post('/reviews/:reviewId/reply', reviewController.addReplyToReview);
+router.post('/reviews/:id/reply', reviewController.addReplyToReview);
 
 // Export the router
 module.exports = router;
