@@ -48,7 +48,7 @@ exports.loginUser = async (req, res) => {
   try {
     const user = await RegisterModel.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: 'User not found. Signup first!' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
