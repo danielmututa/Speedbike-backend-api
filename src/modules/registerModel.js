@@ -1,5 +1,5 @@
-// src/modules/registerModel.js
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const registerSchema = new mongoose.Schema({
   name: {
@@ -15,29 +15,31 @@ const registerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  confirmPassword: {
-    type: String,
-    required: true,
-    validate: {
-      validator: function (value) {
-        return value === this.password; // Ensure confirmPassword matches password
-      },
-      message: 'Passwords do not match.',
-    },
-  },
 });
 
+// Virtual field for confirmPassword (not persisted in the database)
+registerSchema.virtual('confirmPassword')
+  .set(function (value) {
+    this._confirmPassword = value;
+  })
+  .get(function () {
+    return this._confirmPassword;
+  });
 
-// Pre-save hook to hash the password and remove confirmPassword
+// Custom validation for confirmPassword
+registerSchema.pre('validate', function (next) {
+  if (this._confirmPassword && this._confirmPassword !== this.password) {
+    this.invalidate('confirmPassword', 'Passwords do not match.');
+  }
+  next();
+});
+
+// Pre-save hook to hash the password
 registerSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
   try {
-    // Hash the password
     this.password = await bcrypt.hash(this.password, 10);
-
-    // Remove confirmPassword field before saving to the database
-    this.confirmPassword = undefined;
     next();
   } catch (error) {
     next(error);
