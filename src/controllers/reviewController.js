@@ -49,7 +49,37 @@ const getReviewsForBikes = async (req, res) => {
   }
 };
 
+// In your review controller
+const addReplyToReview = async (req, res) => {
+  try {
+    const reviewId = req.params.reviewId;
+    const { ownerResponse } = req.body;
+
+    if (!ownerResponse) {
+      return res.status(400).json({ message: 'Reply text is required' });
+    }
+
+    const updatedReview = await reviewService.addReplyToReview(reviewId, ownerResponse);
+    
+    res.status(200).json({
+      success: true,
+      review: updatedReview
+    });
+  } catch (error) {
+    console.error('Controller error adding reply:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error adding reply',
+      error: error.message
+    });
+  }
+};
+
+
+
+
 module.exports = {
   createReview,
   getReviewsForBikes,
+  addReplyToReview
 };

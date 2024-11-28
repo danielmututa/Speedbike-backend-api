@@ -24,7 +24,18 @@ const getReviewsForBikes = async (bikeId) => {
   }
 };
 
+// In your review service
+const addReplyToReview = async (reviewId, ownerResponse) => {
+  const review = await Review.findByIdAndUpdate(
+    reviewId,
+    { ownerResponse },
+    { new: true }
+  );
+  return review;
+};
+
 module.exports = {
   createReview,
   getReviewsForBikes,
+  addReplyToReview
 };
