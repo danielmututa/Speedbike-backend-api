@@ -128,7 +128,7 @@ const deleteBike = async (bikeId) => {
 
     // Delete the image file if it exists
     if (bike.image) {
-      const imagePath = path.join(__dirname, '..', 'uploads', path.basename(bike.image));
+      const imagePath = path.join(__dirname, '..','..','src','uploads', path.basename(bike.image));
       try {
         await fs.unlink(imagePath);
       } catch (err) {

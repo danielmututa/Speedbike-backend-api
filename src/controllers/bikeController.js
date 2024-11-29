@@ -144,7 +144,7 @@ const searchBikes = async (req, res) => {
 // Handler for getting all images
 const getAllImages = async (req, res) => {
   try {
-    const directoryPath = path.join(__dirname, '../uploads');
+    const directoryPath = path.join(__dirname, '../../src/uploads');
     const files = await fs.promises.readdir(directoryPath);
     
     // Filter for image files

@@ -38,7 +38,7 @@ const upload = multer({
 
 // Create uploads directory if it doesn't exist
 const fs = require('fs');
-const uploadDir = path.join(__dirname, '../uploads');
+const uploadDir = path.join(__dirname, '../../src/uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
