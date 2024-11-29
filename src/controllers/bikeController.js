@@ -1,29 +1,48 @@
 const BikeService = require('../services/bikeService');
 
-// Handler for creating a bike
+// // Handler for creating a bike
+// const createBike = async (req, res) => {
+//   try {
+//     const bikeData = req.body;
+    
+//     // Handle image upload if present
+//     if (req.file) {
+//       try {
+//         BikeService.validateImage(req.file);
+//         bikeData.image = BikeService.processImagePath(req.file.path);
+//       } catch (error) {
+//         return res.status(400).json({ message: error.message });
+//       }
+//     }
+
+//     const newBike = await BikeService.createBike(bikeData);
+//     if (newBike.image) {
+//       newBike.image = BikeService.processImagePath(newBike.image);
+//     }
+//     res.status(201).json(newBike);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Failed to create bike: ' + error.message });
+//   }
+// };
+
+
+
 const createBike = async (req, res) => {
   try {
     const bikeData = req.body;
     
-    // Handle image upload if present
     if (req.file) {
-      try {
-        BikeService.validateImage(req.file);
-        bikeData.image = BikeService.processImagePath(req.file.path);
-      } catch (error) {
-        return res.status(400).json({ message: error.message });
-      }
+      bikeData.image = req.file; // Pass the whole file object
     }
 
     const newBike = await BikeService.createBike(bikeData);
-    if (newBike.image) {
-      newBike.image = BikeService.processImagePath(newBike.image);
-    }
     res.status(201).json(newBike);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create bike: ' + error.message });
   }
 };
+
+
 
 // Handler for fetching a bike by ID
 const getBike = async (req, res) => {
@@ -76,32 +95,54 @@ const getBikesForPurchase = async (req, res) => {
   }
 };
 
-// Handler for updating bike info
+// // Handler for updating bike info
+// const updateBike = async (req, res) => {
+//   try {
+//     const bikeId = req.params.id;
+//     const updateData = req.body;
+
+//     // Handle image upload if present
+//     if (req.file) {
+//       try {
+//         BikeService.validateImage(req.file);
+//         updateData.image = BikeService.processImagePath(req.file.path);
+//       } catch (error) {
+//         return res.status(400).json({ message: error.message });
+//       }
+//     }
+
+//     const updatedBike = await BikeService.updateBike(bikeId, updateData);
+//       // Process image path if available
+//     if (updatedBike.image) {
+//       updatedBike.image = BikeService.processImagePath(updatedBike.image);
+//     }
+//     res.status(200).json(updatedBike);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Failed to update bike: ' + error.message });
+//   }
+// };
+
+
+
+
 const updateBike = async (req, res) => {
   try {
     const bikeId = req.params.id;
     const updateData = req.body;
 
-    // Handle image upload if present
     if (req.file) {
-      try {
-        BikeService.validateImage(req.file);
-        updateData.image = BikeService.processImagePath(req.file.path);
-      } catch (error) {
-        return res.status(400).json({ message: error.message });
-      }
+      updateData.image = req.file; // Pass the whole file object
     }
 
     const updatedBike = await BikeService.updateBike(bikeId, updateData);
-      // Process image path if available
-    if (updatedBike.image) {
-      updatedBike.image = BikeService.processImagePath(updatedBike.image);
-    }
     res.status(200).json(updatedBike);
   } catch (error) {
     res.status(500).json({ message: 'Failed to update bike: ' + error.message });
   }
-};
+};   
+
+     
+
 
 // Handler for deleting a bike
 const deleteBike = async (req, res) => {

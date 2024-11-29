@@ -1,1 +1,7 @@
 node_modules
+# Environment variables
+.env
+
+# Uploads directory (temporary storage)
+uploads/*
+!uploads/.gitkeep

@@ -1,10 +1,50 @@
 const Bike = require('../modules/bikeModel');
 const fs = require('fs').promises; // For file operations
+const cloudinary = require('../config/cloudinary');
 const path = require('path');
 
-// Create a new bike with image
+
+// Add the new Cloudinary upload function
+const uploadToCloudinary = async (file) => {
+  try {
+    if (!file) throw new Error('No file provided');
+    
+    const result = await cloudinary.uploader.upload(file.path, {
+      resource_type: 'auto',
+      folder: 'speedbikes',
+      use_filename: true,
+      unique_filename: true
+    });
+    
+    await fs.unlink(file.path);
+    return result.secure_url;
+  } catch (error) {
+    await fs.unlink(file.path).catch(console.error);
+    throw new Error(`Failed to upload image: ${error.message}`);
+  }
+};
+
+
+
+// // Create a new bike with image
+// const createBike = async (bikeData) => {
+//   try {
+//     const bike = new Bike(bikeData);
+//     await bike.save();
+//     return bike;
+//   } catch (error) {
+//     throw new Error(`Error creating bike: ${error.message}`);
+//   }
+// };
+
+
+// Update createBike function
 const createBike = async (bikeData) => {
   try {
+    if (bikeData.image && typeof bikeData.image === 'object') {
+      const imageUrl = await uploadToCloudinary(bikeData.image);
+      bikeData.image = imageUrl;
+    }
     const bike = new Bike(bikeData);
     await bike.save();
     return bike;
@@ -86,20 +126,49 @@ const getBikesForPurchase = async () => {
   }
 };
 
-// Update bike info including image
+
+
+// // Update bike info including image
+// const updateBike = async (bikeId, updateData) => {
+//   try {
+//     // If updating with new image, delete old image first
+//     if (updateData.image) {
+//       const existingBike = await Bike.findById(bikeId);
+//       if (existingBike && existingBike.image) {
+//         const oldImagePath = path.join(__dirname, '..', existingBike.image);
+//         try {
+//           await fs.unlink(oldImagePath);
+//         } catch (err) {
+//           console.log('No old image found to delete');
+//         }
+//       }
+//     }
+
+//     const updatedBike = await Bike.findByIdAndUpdate(
+//       bikeId,
+//       updateData,
+//       { new: true }
+//     );
+
+//     if (!updatedBike) {
+//       throw new Error('Bike not found');
+//     }
+
+//     return updatedBike;
+//   } catch (error) {
+//     throw new Error(`Error updating bike: ${error.message}`);
+//   }
+// };
+
+
+
+
+ // Update updateBike function
 const updateBike = async (bikeId, updateData) => {
   try {
-    // If updating with new image, delete old image first
-    if (updateData.image) {
-      const existingBike = await Bike.findById(bikeId);
-      if (existingBike && existingBike.image) {
-        const oldImagePath = path.join(__dirname, '..', existingBike.image);
-        try {
-          await fs.unlink(oldImagePath);
-        } catch (err) {
-          console.log('No old image found to delete');
-        }
-      }
+    if (updateData.image && typeof updateData.image === 'object') {
+      const imageUrl = await uploadToCloudinary(updateData.image);
+      updateData.image = imageUrl;
     }
 
     const updatedBike = await Bike.findByIdAndUpdate(
@@ -118,7 +187,40 @@ const updateBike = async (bikeId, updateData) => {
   }
 };
 
-// Delete a bike and its image from the database
+
+
+
+
+
+
+
+// // Delete a bike and its image from the database
+// const deleteBike = async (bikeId) => {
+//   try {
+//     const bike = await Bike.findById(bikeId);
+//     if (!bike) {
+//       throw new Error('Bike not found');
+//     }
+
+//     // Delete the image file if it exists
+//     if (bike.image) {
+//       const imagePath = path.join(__dirname, '..', 'uploads', path.basename(bike.image));
+//       try {
+//         await fs.unlink(imagePath);
+//       } catch (err) {
+//         console.log('Error deleting image file:', err);
+//         // Continue with bike deletion even if image deletion fails
+//       }
+//     }
+
+//     await Bike.findByIdAndDelete(bikeId);
+//     return { message: 'Bike and associated image deleted successfully' };
+//   } catch (error) {
+//     throw new Error(`Error deleting bike: ${error.message}`);
+//   }
+// };
+
+
 const deleteBike = async (bikeId) => {
   try {
     const bike = await Bike.findById(bikeId);
@@ -126,15 +228,9 @@ const deleteBike = async (bikeId) => {
       throw new Error('Bike not found');
     }
 
-    // Delete the image file if it exists
+    // Delete image from Cloudinary if it exists
     if (bike.image) {
-      const imagePath = path.join(__dirname, '..', 'uploads', path.basename(bike.image));
-      try {
-        await fs.unlink(imagePath);
-      } catch (err) {
-        console.log('Error deleting image file:', err);
-        // Continue with bike deletion even if image deletion fails
-      }
+      await deleteFromCloudinary(bike.image);
     }
 
     await Bike.findByIdAndDelete(bikeId);
@@ -143,6 +239,21 @@ const deleteBike = async (bikeId) => {
     throw new Error(`Error deleting bike: ${error.message}`);
   }
 };
+
+
+const deleteFromCloudinary = async (imageUrl) => {
+  try {
+    if (!imageUrl) return;
+    
+    // Extract public_id from the URL
+    const publicId = imageUrl.split('/').slice(-1)[0].split('.')[0];
+    await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.error('Error deleting image from Cloudinary:', error);
+  }
+};
+
+
 
 // Helper function to validate image file
 const validateImage = (file) => {
@@ -218,5 +329,7 @@ module.exports = {
   validateImage,
   processImagePath,
   searchBikes,
-  getAllImages
+  getAllImages,
+  uploadToCloudinary,
+  deleteFromCloudinary
 };
