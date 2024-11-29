@@ -58,7 +58,7 @@ const getBikes = async (userId, filter = {}) => {
 // Get all images in the uploads directory
 const getAllImages = async (req, res) => {
   try {
-    const directoryPath = path.join(__dirname, '..', 'uploads');
+    const directoryPath = path.join(__dirname, '..','..', 'src','uploads');
     const files = await fs.readdir(directoryPath); // Read files in the uploads directory
     
     // Filter only image files (adjust file extensions if necessary)
