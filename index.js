@@ -8,8 +8,9 @@ const serverConfig = require('./src/config/serverConfig');
 // const multer = require('multer');
 const path = require('path')
 const fs = require('fs');
-// const uploadDir = path.join(__dirname, 'src', 'uploads');
-const cloudinary = require('./src/config/cloudinary'); // Add Cloudinary import
+const uploadDir = path.join(__dirname, 'src', 'uploads');
+
+
 // Import route files
 const bikeRoutes = require('./src/routes/bikeRoutes');
 const motbookingRoutes = require('./src/routes/motbookingRoutes');
@@ -32,10 +33,10 @@ const errorMiddleware = require('./src/middleware/errorMiddleware');
 
 
 dotenv.config(); // Initialize environment variables
-const app = express();
-app.use(cors());
-app.use(express.json()); // Middleware to parse JSON
 
+const app = express();
+
+app.use(cors());
 
 // Database connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -45,7 +46,7 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection error:', err));
 
-
+app.use(express.json()); // Middleware to parse JSON
 
 
 
@@ -56,27 +57,13 @@ app.use(errorMiddleware);
 connectDB();
 
 
-// Verify Cloudinary configuration
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
-
-
-// if (!fs.existsSync(uploadDir)) {
-//   fs.mkdirSync(uploadDir, { recursive: true });
-//   console.log('Created uploads directory');
-// }
-
-
-// app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
-
-// Temporary storage access for development
-if (process.env.NODE_ENV === 'development') {
-  app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log('Created uploads directory');
 }
+
+app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')));
+
 
 // Bike Routes
 app.use('/api/bikes', bikeRoutes, express.static(path.join(__dirname, 'src', 'uploads')));
@@ -105,7 +92,6 @@ app.use('/api/eventimage', eventimageRoutes);
 app.use('/api/register', registerRoutes);
 
 // const upload = multer({ storage });
-
 
 
 
